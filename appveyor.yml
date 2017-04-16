@@ -1,0 +1,26 @@
+version: 1.0.0.{build}
+skip_tags: true
+image: Visual Studio 2017
+clone_depth: 1
+environment:
+  NUGET_SECURE_TOKEN:
+    secure: eF0Mu+Ky+FtngFJN7u4unv9l2ebEvlvfim9hPpWkRAc=
+  nuget_user: adimosh@gmail.com
+  nuget_password:
+    secure: uBvWMFhy9DPgv2TIksG2FQ==
+install:
+- cmd: >-
+    appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe
+
+    appveyor-retry nuget restore
+nuget:
+  account_feed: true
+  project_feed: true
+build_script:
+- cmd: >-
+    dotnet build IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release
+deploy_script:
+- cmd: >-
+    dotnet pack IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release --no-build
+
+    nuget push IX.CsprojVersioning\bin\Release\dotnet-csprojVersioning.1.0.0.nupkg -ApiKey %NUGET_SECURE_TOKEN% -Source https://ci.appveyor.com/nuget/adimosh-at-live-dot-com/api/v2/package
