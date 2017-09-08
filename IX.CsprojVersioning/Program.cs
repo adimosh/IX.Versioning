@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="Program.cs" company="Adrian Mos">
+// Copyright (c) Adrian Mos with all rights reserved. Part of the IX Framework.
+// </copyright>
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -27,8 +31,6 @@ namespace CsprojVersioning
             }
 
             var release = args.Any(p => p == "Release");
-
-            IFile file = new File();
 
             string[] paths = args.Where(p => !string.IsNullOrWhiteSpace(p) && p != version && p != "Release").Distinct().ToArray();
 
@@ -66,92 +68,19 @@ namespace CsprojVersioning
             {
                 IDirectory directory = new Directory();
 
-                if (directory.EnumerateFiles(".", "*.csproj").Any(p => !ProcessXmlFile(p)))
-                {
-                    // All search - failure
-                    return 3;
-                }
-            }
-            else
-            {
-                if (paths.Any(p => !ProcessXmlFile(p)))
-                {
-                    // Specified path - failure
-                    return 4;
-                }
+                paths = directory.EnumerateFiles(".", "*.csproj").ToArray();
             }
 
-            bool ProcessXmlFile(string fileName)
+            IFile file = new File();
+            IPath path = new Path();
+
+            var service = new XmlFileParserService(file, path);
+
+            IEnumerable<string> processedPaths = service.ProcessPaths(paths, version, majorVersion, minorVersion, buildVersion, revisionVersion, prereleaseVersion, release);
+            if (!processedPaths.Any())
             {
-                if (!file.Exists(fileName))
-                {
-                    return false;
-                }
-
-                XDocument document;
-                try
-                {
-                    using (System.IO.Stream s = file.OpenRead(fileName))
-                    {
-                        document = XDocument.Load(s, LoadOptions.PreserveWhitespace);
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-
-                XElement root = document.Descendants("Project").FirstOrDefault();
-
-                XElement missingContainer = null;
-
-                IEnumerable<XElement> xVersions = root.Descendants("PropertyGroup").Descendants("Version");
-                EnsureCorrectOnlyOneVersion(
-                    xVersions,
-                    release ?
-                        $"{majorVersion}.{minorVersion}.{buildVersion}{(string.IsNullOrWhiteSpace(prereleaseVersion) ? string.Empty : $"-{prereleaseVersion}")}" :
-                        version,
-                    "Version");
-
-                IEnumerable<XElement> xFileVersions = root.Descendants("PropertyGroup").Descendants("FileVersion");
-                EnsureCorrectOnlyOneVersion(xFileVersions, version, "FileVersion");
-
-                IEnumerable<XElement> xAssemblyVersions = root.Descendants("PropertyGroup").Descendants("AssemblyVersion");
-                EnsureCorrectOnlyOneVersion(xAssemblyVersions, $"{majorVersion}.{minorVersion}.{buildVersion}.0", "AssemblyVersion");
-
-                void EnsureCorrectOnlyOneVersion(IEnumerable<XElement> xElements, string correctVersion, string versionName)
-                {
-                    XElement xElement = xElements.FirstOrDefault();
-
-                    if (xElement == null)
-                    {
-                        EnsureMissingContainerExists();
-
-                        xElement = new XElement(versionName);
-
-                        missingContainer.Add(xElement);
-
-                        void EnsureMissingContainerExists()
-                        {
-                            if (missingContainer != null)
-                            {
-                                return;
-                            }
-
-                            missingContainer = new XElement("PropertyGroup");
-
-                            root.Add(missingContainer);
-                        }
-                    }
-
-                    xElement.SetValue(correctVersion);
-
-                    xElements.Where(p => p != xElement).ForEach(p => p.Remove());
-                }
-
-                documents.Add(fileName, document);
-
-                return true;
+                // Specified path - failure
+                return 4;
             }
 
             documents.ForEach(p =>

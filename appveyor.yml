@@ -23,4 +23,4 @@ deploy_script:
 - cmd: >-
     dotnet pack IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release --no-build
 
-    nuget push IX.CsprojVersioning\bin\Release\dotnet-csprojVersioning.1.0.0.nupkg -ApiKey %NUGET_SECURE_TOKEN% -Source https://ci.appveyor.com/nuget/adimosh-at-live-dot-com/api/v2/package
+    nuget push IX.CsprojVersioning\bin\Release\dotnet-csprojVersioning.1.0.0.1.nupkg -ApiKey %NUGET_SECURE_TOKEN% -Source https://ci.appveyor.com/nuget/adimosh-at-live-dot-com/api/v2/package
