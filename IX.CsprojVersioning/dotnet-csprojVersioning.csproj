@@ -29,7 +29,11 @@
   <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.0'">
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-csprojVersioning" Version="1.0.0.4" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Remove=".vscode\**" />
     <EmbeddedResource Remove=".vscode\**" />
