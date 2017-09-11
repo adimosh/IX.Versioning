@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "dotnet-csprojVersioning": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\Projects\\IX.Math\\IX.Math\\IX.Math.csproj 4.5.7.13"
-    }
-  }
-}
