@@ -21,12 +21,12 @@ namespace CsprojVersioning
             this.path = path;
         }
 
-        internal IEnumerable<string> ProcessPaths(IEnumerable<string> paths, string version, string majorVersion, string minorVersion, string buildVersion, string revisionVersion, string preReleaseVersion, bool release)
+        internal IEnumerable<(string, XDocument)> ProcessPaths(IEnumerable<string> paths, string version, string majorVersion, string minorVersion, string buildVersion, string revisionVersion, string preReleaseVersion, bool release)
         {
-            var finalPaths = new List<string>();
+            var finalPaths = new List<(string, XDocument)>();
             foreach (var path in paths.Select(p => p.ToLowerInvariant()))
             {
-                if (finalPaths.Contains(path))
+                if (finalPaths.Any(p => p.Item1 == path))
                 {
                     continue;
                 }
@@ -35,46 +35,51 @@ namespace CsprojVersioning
 
                 if (extension == "csproj")
                 {
-                    if (ProcessCsprojFile(path))
+                    (bool, XDocument) processResult = ProcessCsprojFile(path);
+                    if (processResult.Item1)
                     {
-                        finalPaths.Add(path);
+                        finalPaths.Add((path, processResult.Item2));
 
                         var path2 = this.path.ChangeExtension(path, "nuspec");
 
-                        if (ProcessNuspecFile(path2))
+                        (bool, XDocument) processResult2 = ProcessNuspecFile(path2);
+                        if (processResult2.Item1)
                         {
-                            finalPaths.Add(path2);
+                            finalPaths.Add((path2, processResult2.Item2));
                         }
                     }
                 }
                 else if (extension == "nuspec")
                 {
-                    if (ProcessNuspecFile(path))
+                    (bool, XDocument) processResult = ProcessNuspecFile(path);
+                    if (processResult.Item1)
                     {
-                        finalPaths.Add(path);
+                        finalPaths.Add((path, processResult.Item2));
 
                         var path2 = this.path.ChangeExtension(path, "csproj");
 
-                        if (ProcessCsprojFile(path2))
+                        (bool, XDocument) processResult2 = ProcessCsprojFile(path2);
+                        if (processResult2.Item1)
                         {
-                            finalPaths.Add(path2);
+                            finalPaths.Add((path2, processResult2.Item2));
                         }
                     }
                 }
                 else
                 {
-                    if (ProcessCsprojFile(path))
+                    (bool, XDocument) processResult = ProcessCsprojFile(path);
+                    if (processResult.Item1)
                     {
-                        finalPaths.Add(path);
+                        finalPaths.Add((path, processResult.Item2));
                     }
                 }
 
                 // .csproj file handling
-                bool ProcessCsprojFile(string fileName)
+                (bool, XDocument) ProcessCsprojFile(string fileName)
                 {
                     if (!this.file.Exists(fileName))
                     {
-                        return false;
+                        return (false, null);
                     }
 
                     XDocument document;
@@ -87,7 +92,7 @@ namespace CsprojVersioning
                     }
                     catch
                     {
-                        return false;
+                        return (false, null);
                     }
 
                     XElement root = document.Descendants("Project").FirstOrDefault();
@@ -136,15 +141,15 @@ namespace CsprojVersioning
                         xElements.Where(p => p != xElement).ForEach(p => p.Remove());
                     }
 
-                    return true;
+                    return (true, document);
                 }
 
                 // .nuspec file handling
-                bool ProcessNuspecFile(string fileName)
+                (bool, XDocument) ProcessNuspecFile(string fileName)
                 {
                     if (!this.file.Exists(fileName))
                     {
-                        return false;
+                        return (false, null);
                     }
 
                     XDocument document;
@@ -157,7 +162,7 @@ namespace CsprojVersioning
                     }
                     catch
                     {
-                        return false;
+                        return (false, null);
                     }
 
                     XElement root = document.Descendants("package").FirstOrDefault();
@@ -192,7 +197,7 @@ namespace CsprojVersioning
                         xElements.Where(p => p != xElement).ForEach(p => p.Remove());
                     }
 
-                    return true;
+                    return (true, document);
                 }
             }
 

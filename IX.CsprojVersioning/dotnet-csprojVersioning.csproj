@@ -9,11 +9,11 @@
     <StartupObject />
     <AssemblyName>dotnet-csprojVersioning</AssemblyName>
     <RootNamespace>CsprojVersioning</RootNamespace>
-    <Version>1.0.0.1</Version>
+    <Version>1.0.0.4</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants>RELEASE</DefineConstants>
   </PropertyGroup>
   
@@ -24,11 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Primitives" Version="4.3.0" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net452'">
-    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" PrivateAssets="all" />
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.0'">
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
   
   <ItemGroup>

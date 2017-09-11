@@ -76,20 +76,20 @@ namespace CsprojVersioning
 
             var service = new XmlFileParserService(file, path);
 
-            IEnumerable<string> processedPaths = service.ProcessPaths(paths, version, majorVersion, minorVersion, buildVersion, revisionVersion, prereleaseVersion, release);
+            IEnumerable<(string, XDocument)> processedPaths = service.ProcessPaths(paths, version, majorVersion, minorVersion, buildVersion, revisionVersion, prereleaseVersion, release);
             if (!processedPaths.Any())
             {
                 // Specified path - failure
                 return 4;
             }
 
-            documents.ForEach(p =>
+            processedPaths.ForEach(p =>
             {
-                using (System.IO.Stream s = file.Create(p.Key))
+                using (System.IO.Stream s = file.Create(p.Item1))
                 {
                     using (var writer = XmlWriter.Create(s, new XmlWriterSettings { OmitXmlDeclaration = true, }))
                     {
-                        p.Value.Save(writer);
+                        p.Item2.Save(writer);
                     }
                 }
             });
