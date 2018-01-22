@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;net45;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="..\DefaultPackageVersionSystem.props" />
+
+  <PropertyGroup>
+    <Title>IX Versioning</Title>
+    <Description>A library for contracts in versioning of different projects and file types.</Description>
+  </PropertyGroup>
+
+  <Import Project="..\Branding.props" />
+
+  <Import Project="..\TargetSymbols.props" />
+
+  <Import Project="..\DocumentationFile.props" />
+
+  <Import Project="..\PackageSettings.props" />
+
+  <Import Project="..\VsCodeRemove.targets" />
+
+  <Import Project="..\StyleCop.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='net45'">
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
+  </ItemGroup>
+
+  <Import Project="..\CliToolsReference.Normal.targets" />
+
+</Project>
