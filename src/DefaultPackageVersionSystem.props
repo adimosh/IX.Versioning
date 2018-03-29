@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+</Project>

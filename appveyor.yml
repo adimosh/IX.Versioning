@@ -1,26 +1,62 @@
 version: 1.0.0.{build}
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+  - master
 skip_tags: true
 image: Visual Studio 2017
+configuration: Release
 clone_depth: 1
-environment:
-  NUGET_SECURE_TOKEN:
-    secure: eF0Mu+Ky+FtngFJN7u4unv9l2ebEvlvfim9hPpWkRAc=
-  nuget_user: adimosh@gmail.com
-  nuget_password:
-    secure: QzxGG+tm1H9IaA5tMZx2pA==
-install:
-- cmd: >-
-    appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe
-
-    appveyor-retry nuget restore
 nuget:
-  account_feed: true
-  project_feed: true
-build_script:
+  disable_publish_on_pr: true
+before_build:
 - cmd: >-
-    dotnet build IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release
-deploy_script:
-- cmd: >-
-    dotnet pack IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release --no-build
+    dotnet clean src\IX.Versioning.sln -c Release
 
-    nuget push IX.CsprojVersioning\bin\Release\dotnet-csprojVersioning.1.0.0.4.nupkg -ApiKey %NUGET_SECURE_TOKEN% -Source https://ci.appveyor.com/nuget/adimosh-at-live-dot-com/api/v2/package
+    dotnet clean src\IX.Versioning.sln -c Debug
+
+    dotnet restore src/IX.Versioning.sln
+
+    cd src\IX.CsprojVersioning\
+
+    dotnet csprojVersioning dotnet-csprojVersioning.csproj %APPVEYOR_BUILD_VERSION%
+
+    cd ..\IX.Versioning\
+
+    dotnet csprojVersioning IX.Versioning.csproj %APPVEYOR_BUILD_VERSION%
+
+    cd ..\IX.Versioning.Csproj\
+
+    dotnet csprojVersioning IX.Versioning.Csproj.csproj %APPVEYOR_BUILD_VERSION%
+
+    cd ..\IX.Versioning.NuSpec\
+
+    dotnet csprojVersioning IX.Versioning.NuSpec.csproj %APPVEYOR_BUILD_VERSION%
+
+    cd ..\..\
+
+    dotnet clean src\IX.Versioning.sln -c Release
+
+    dotnet clean src\IX.Versioning.sln -c Debug
+
+    dotnet restore src/IX.Versioning.sln
+build:
+  project: src\IX.Versioning.sln
+  parallel: true
+  verbosity: minimal
+artifacts:
+- path: src\IX.Versioning\bin\Release\IX.Versioning.%APPVEYOR_BUILD_VERSION%.nupkg
+  name: IX.Versioning
+- path: src\IX.CsprojVersioning\bin\Release\dotnet-csprojVersioning.%APPVEYOR_BUILD_VERSION%.nupkg
+  name: IX.CsprojVersioning
+- path: src\IX.Versioning.NuSpec\bin\Release\IX.Versioning.NuSpec.%APPVEYOR_BUILD_VERSION%.nupkg
+  name: IX.Versioning.NuSpec
+- path: src\IX.Versioning.Csproj\bin\Release\IX.Versioning.Csproj.%APPVEYOR_BUILD_VERSION%.nupkg
+  name: IX.Versioning.Csproj
+deploy:
+- provider: NuGet
+  server: https://ci.appveyor.com/nuget/adimosh-at-live-dot-com/api/v2/package
+  api_key:
+    secure: eF0Mu+Ky+FtngFJN7u4unv9l2ebEvlvfim9hPpWkRAc=
+  skip_symbols: true
