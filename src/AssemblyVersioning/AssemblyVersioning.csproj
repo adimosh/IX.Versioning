@@ -62,5 +62,19 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IX.Versioning.Csproj\IX.Versioning.Csproj.csproj">
+      <Project>{d62f7c59-6fc4-4678-a6db-4c2ad7c357d1}</Project>
+      <Name>IX.Versioning.Csproj</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IX.Versioning.NuSpec\IX.Versioning.NuSpec.csproj">
+      <Project>{264d0810-8a2c-4b4c-9447-c2dacd3406e7}</Project>
+      <Name>IX.Versioning.NuSpec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IX.Versioning\IX.Versioning.csproj">
+      <Project>{46ee7d8d-0eb5-44e2-95a2-28e16bce0d75}</Project>
+      <Name>IX.Versioning</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

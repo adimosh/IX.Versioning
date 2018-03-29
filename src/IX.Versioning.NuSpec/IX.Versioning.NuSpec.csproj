@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Title>IX Versioning - CSPROJ</Title>
-    <Description>A library used for versioning CSPROJ files.</Description>
+    <Title>IX Versioning - NUSPEC</Title>
+    <Description>A library used for versioning NUSPEC files.</Description>
   </PropertyGroup>
 
   <Import Project="..\Branding.props" />

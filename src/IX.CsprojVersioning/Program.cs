@@ -5,10 +5,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
-using IX.StandardExtensions;
 using IX.System.IO;
+using IX.Versioning;
 
 namespace CsprojVersioning
 {
@@ -32,67 +31,36 @@ namespace CsprojVersioning
 
             var release = args.Any(p => p == "Release");
 
-            string[] paths = args.Where(p => !string.IsNullOrWhiteSpace(p) && p != version && p != "Release").Distinct().ToArray();
+            var paths = args.Where(p => !string.IsNullOrWhiteSpace(p) && p != version && p != "Release").Distinct().ToArray();
 
             var documents = new Dictionary<string, XDocument>(paths.Length);
 
-            string majorVersion;
-            string minorVersion;
-            string buildVersion;
-            string revisionVersion;
-            string prereleaseVersion;
+            (var success, var majorVersion, var minorVersion, var buildVersion, var revisionVersion, var versionSuffix) = VersionElementsHelper.GetVersionElementsFromString(version);
 
-            var versionRegex = new Regex($@"^(?<{nameof(majorVersion)}>\d{{1,}}).(?<{nameof(minorVersion)}>\d{{1,}}).(?<{nameof(buildVersion)}>\d{{1,}})(?:.(?<{nameof(revisionVersion)}>\d{{1,}}))?(?:-(?<{nameof(prereleaseVersion)}>[\d\w]{{1,}}))?$");
-
-            Match versionMatch = versionRegex.Match(version);
-
-            if (!versionMatch.Success)
+            if (!success)
             {
                 // Version string not good
                 return 2;
             }
 
-            majorVersion = versionMatch.Groups[nameof(majorVersion)]?.Value;
-            minorVersion = versionMatch.Groups[nameof(minorVersion)]?.Value;
-            buildVersion = versionMatch.Groups[nameof(buildVersion)]?.Value;
-            revisionVersion = versionMatch.Groups[nameof(revisionVersion)]?.Value;
-            prereleaseVersion = versionMatch.Groups[nameof(prereleaseVersion)]?.Value;
-
-            if (string.IsNullOrWhiteSpace(majorVersion) || string.IsNullOrWhiteSpace(minorVersion) || string.IsNullOrWhiteSpace(buildVersion))
-            {
-                // Version string not good
-                return 2;
-            }
+            IDirectory directory = new Directory();
 
             if (paths.Length == 0)
             {
-                IDirectory directory = new Directory();
-
-                paths = directory.EnumerateFiles(".", "*.csproj").ToArray();
+                paths = new[] { directory.GetCurrentDirectory() };
             }
 
             IFile file = new File();
             IPath path = new Path();
 
-            var service = new XmlFileParserService(file, path);
+            var service = new XmlFileParserService(file, path, directory);
 
-            IEnumerable<(string, XDocument)> processedPaths = service.ProcessPaths(paths, version, majorVersion, minorVersion, buildVersion, revisionVersion, prereleaseVersion, release);
-            if (!processedPaths.Any())
+            var result = service.ProcessPaths(paths, majorVersion, minorVersion, buildVersion, revisionVersion ?? 0, versionSuffix, release);
+            if (!result)
             {
                 // Specified path - failure
                 return 4;
             }
-
-            processedPaths.ForEach(p =>
-            {
-                using (System.IO.Stream s = file.Create(p.Item1))
-                {
-                    using (var writer = XmlWriter.Create(s, new XmlWriterSettings { OmitXmlDeclaration = true, }))
-                    {
-                        p.Item2.Save(writer);
-                    }
-                }
-            });
 
             // Success
             return 0;

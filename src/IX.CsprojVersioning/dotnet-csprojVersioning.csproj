@@ -9,7 +9,7 @@
     <StartupObject />
     <AssemblyName>dotnet-csprojVersioning</AssemblyName>
     <RootNamespace>CsprojVersioning</RootNamespace>
-    <Version>1.0.0.5</Version>
+    <Version>1.0.0.6</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
   
@@ -18,8 +18,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="IX.Abstractions.FileSystem" Version="0.5.0.29" />
-    <PackageReference Include="IX.StandardExtensions" Version="0.5.0.29" />
+    <PackageReference Include="IX.Abstractions.FileSystem" Version="0.5.0.39" />
+    <PackageReference Include="IX.StandardExtensions" Version="0.5.0.39" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +38,11 @@
   
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\IX.Versioning.Csproj\IX.Versioning.Csproj.csproj" />
+    <ProjectReference Include="..\IX.Versioning.NuSpec\IX.Versioning.NuSpec.csproj" />
   </ItemGroup>
 
 </Project>

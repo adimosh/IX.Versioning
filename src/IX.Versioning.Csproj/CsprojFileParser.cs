@@ -81,7 +81,7 @@ namespace IX.Versioning.Csproj
             XElement missingContainer = null;
 
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            var (ReleaseVersion, FileVersion, AssemblyVersion, FileVersionClassic, AssemblyVersionClassic) = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
+            (var ReleaseVersion, var FileVersion, var AssemblyVersion, var FileVersionClassic, var AssemblyVersionClassic) = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
 #pragma warning restore SA1312 // Variable names should begin with lower-case letter
 
             var isCore = root.Attribute("Sdk")?.Value?.InvariantCultureEqualsInsensitive("Microsoft.NET.Sdk") ?? false;

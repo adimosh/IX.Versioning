@@ -16,6 +16,8 @@ namespace IX.Versioning
         /// </summary>
         private static readonly Regex SuffixRegex = new Regex("^(?<alphabeta>alpha|beta|prealpha|prebeta|pre-alpha|pre-beta)(?<number>\\d*)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
+        private static readonly Regex VersionRegex = new Regex(@"^(?<majorVersion>\d{{1,}}).(?<minorVersion>\d{{1,}}).(?<buildVersion>\d{{1,}})(?:.(?<revisionVersion>\d{{1,}}))?(?:-(?<prereleaseVersion>[\d\w]{{1,}}))?$");
+
         /// <summary>
         /// Versions the strings.
         /// </summary>
@@ -26,7 +28,7 @@ namespace IX.Versioning
         /// <param name="newVersionSuffix">The new version suffix.</param>
         /// <param name="noRevision">if set to <c>true</c>, no revision version is set.</param>
         /// <returns>System.String.</returns>
-        public static (string ReleaseVersion, string FileVersion, string AssemblyVersion, string FileVersionClassic, string AssemblyVersionClassic) VersionStrings(int newMajorVersion, int newMinorVersion, int newBuildVersion, int newRevisionVersion = 0, string newVersionSuffix = null, bool noRevision = false)
+        public static (string releaseVersion, string fileVersion, string assemblyVersion, string fileVersionClassic, string assemblyVersionClassic) VersionStrings(int newMajorVersion, int newMinorVersion, int newBuildVersion, int newRevisionVersion = 0, string newVersionSuffix = null, bool noRevision = false)
         {
             string suffix;
             if (string.IsNullOrWhiteSpace(newVersionSuffix))
@@ -68,6 +70,48 @@ namespace IX.Versioning
                 noRevision ?
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}" :
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}.0");
+        }
+
+        /// <summary>
+        /// Gets the version elements from an input string.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns>The version elements, as a tuple.</returns>
+        public static (bool success, int majorVersion, int minorVersion, int buildVersion, int? revisionVersion, string versionSuffix) GetVersionElementsFromString(string version)
+        {
+            Match versionMatch = VersionRegex.Match(version);
+
+            if (!versionMatch.Success)
+            {
+                return (false, 0, 0, 0, null, null);
+            }
+
+            var majorVersion = versionMatch.Groups["majorVersion"]?.Value;
+            var minorVersion = versionMatch.Groups["minorVersion"]?.Value;
+            var buildVersion = versionMatch.Groups["buildVersion"]?.Value;
+            var revisionVersion = versionMatch.Groups["revisionVersion"]?.Value;
+            var prereleaseVersion = versionMatch.Groups["prereleaseVersion"]?.Value;
+
+            if (string.IsNullOrWhiteSpace(majorVersion) || string.IsNullOrWhiteSpace(minorVersion) || string.IsNullOrWhiteSpace(buildVersion))
+            {
+                return (false, 0, 0, 0, null, null);
+            }
+
+            if (!int.TryParse(majorVersion, out var newMajorVersion) ||
+                !int.TryParse(minorVersion, out var newMinorVersion) ||
+                !int.TryParse(buildVersion, out var newBuildVersion))
+            {
+                return (false, 0, 0, 0, null, null);
+            }
+
+            if (!int.TryParse(revisionVersion, out var newRevisionVersion))
+            {
+                return (true, newMajorVersion, newMinorVersion, newBuildVersion, null, prereleaseVersion);
+            }
+            else
+            {
+                return (true, newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, prereleaseVersion);
+            }
         }
     }
 }
