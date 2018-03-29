@@ -8,9 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F18C224-692C-4570-B8E2-B72DAB09C37E}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		appveyor.yml = appveyor.yml
-		LICENSE.md = LICENSE.md
-		README.md = README.md
+		..\.gitignore = ..\.gitignore
+		..\appveyor.yml = ..\appveyor.yml
+		..\LICENSE.md = ..\LICENSE.md
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyVersioning", "AssemblyVersioning\AssemblyVersioning.csproj", "{633CA26F-D750-4E1D-AABC-613719A68AE6}"
@@ -19,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IX.Versioning", "IX.Version
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IX.Versioning.Csproj", "IX.Versioning.Csproj\IX.Versioning.Csproj.csproj", "{D62F7C59-6FC4-4678-A6DB-4C2AD7C357D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IX.Versioning.NuSpec", "IX.Versioning.NuSpec\IX.Versioning.NuSpec.csproj", "{264D0810-8A2C-4B4C-9447-C2DACD3406E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IX.Versioning.NuSpec", "IX.Versioning.NuSpec\IX.Versioning.NuSpec.csproj", "{264D0810-8A2C-4B4C-9447-C2DACD3406E7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{7F7A66C3-3C08-48B9-B251-D014624CCCF6}"
 	ProjectSection(SolutionItems) = preProject
