@@ -45,4 +45,6 @@
     <ProjectReference Include="..\IX.Versioning.NuSpec\IX.Versioning.NuSpec.csproj" />
   </ItemGroup>
 
+  <Import Project="..\CliToolsReference.Normal.targets" />
+
 </Project>
