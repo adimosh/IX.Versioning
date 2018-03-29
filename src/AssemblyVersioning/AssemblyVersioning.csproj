@@ -33,10 +33,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IX.Abstractions, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IX.Abstractions.0.5.0.29\lib\net45\IX.Abstractions.dll</HintPath>
+      <HintPath>..\packages\IX.Abstractions.0.5.0.39\lib\net45\IX.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="IX.Abstractions.FileSystem, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IX.Abstractions.FileSystem.0.5.0.29\lib\net45\IX.Abstractions.FileSystem.dll</HintPath>
+      <HintPath>..\packages\IX.Abstractions.FileSystem.0.5.0.39\lib\net45\IX.Abstractions.FileSystem.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -47,6 +47,9 @@
     <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\IX.CsprojVersioning\FileParserService.cs">
+      <Link>FileParserService.cs</Link>
+    </Compile>
+    <Compile Include="..\IX.CsprojVersioning\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

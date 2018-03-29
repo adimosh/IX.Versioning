@@ -1,4 +1,4 @@
-﻿// <copyright file="XmlFileParserService.cs" company="Adrian Mos">
+﻿// <copyright file="FileParserService.cs" company="Adrian Mos">
 // Copyright (c) Adrian Mos with all rights reserved. Part of the IX Framework.
 // </copyright>
 
@@ -10,14 +10,14 @@ using IX.Versioning.NuSpec;
 
 namespace CsprojVersioning
 {
-    internal class XmlFileParserService
+    internal class FileParserService
     {
         private readonly IPath path;
 
         private readonly CsprojFileParser csprojParser;
         private readonly NuSpecFileParser nuspecParser;
 
-        internal XmlFileParserService(IFile file, IPath path, IDirectory directory)
+        internal FileParserService(IFile file, IPath path, IDirectory directory)
         {
             this.path = path;
 

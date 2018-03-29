@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using IX.System.IO;
 using IX.Versioning;
@@ -53,7 +52,7 @@ namespace CsprojVersioning
             IFile file = new File();
             IPath path = new Path();
 
-            var service = new XmlFileParserService(file, path, directory);
+            var service = new FileParserService(file, path, directory);
 
             var result = service.ProcessPaths(paths, majorVersion, minorVersion, buildVersion, revisionVersion ?? 0, versionSuffix, release);
             if (!result)
