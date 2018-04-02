@@ -76,7 +76,12 @@ namespace IX.Versioning.Csproj
                 return false;
             }
 
-            XElement root = document.Descendants("Project").FirstOrDefault();
+            XElement root = document.Root;
+
+            if (root == null)
+            {
+                return false;
+            }
 
             XElement missingContainer = null;
 

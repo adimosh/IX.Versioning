@@ -71,7 +71,12 @@ namespace IX.Versioning.NuSpec
                 return false;
             }
 
-            XElement root = document.Descendants("package").FirstOrDefault();
+            XElement root = document.Root;
+
+            if (root == null)
+            {
+                return false;
+            }
 
             XElement missingContainer = root.Descendants("metadata").FirstOrDefault();
             if (missingContainer == null)
