@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using IX.StandardExtensions;
+using IX.StandardExtensions.Globalization;
 using IX.System.IO;
 
 namespace IX.Versioning.NuSpec
@@ -78,17 +79,16 @@ namespace IX.Versioning.NuSpec
                 return false;
             }
 
-            XElement missingContainer = root.Descendants("metadata").FirstOrDefault();
+            XElement missingContainer = root.Elements().Where(p => p.Name.LocalName.CurrentCultureEquals("metadata")).FirstOrDefault();
             if (missingContainer == null)
             {
                 missingContainer = new XElement("metadata");
+                root.Add(missingContainer);
             }
-
-            root.Add(missingContainer);
 
             (var releaseVersion, var fileVersion, var assemblyVersion, var fileVersionClassic, var assemblyVersionClassic) = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
 
-            IEnumerable<XElement> xVersions = missingContainer.Descendants("version");
+            IEnumerable<XElement> xVersions = missingContainer.Elements().Where(p => p.Name.LocalName.CurrentCultureEquals("version"));
             EnsureCorrectOnlyOneVersion(
                 xVersions,
                 fileVersion,
@@ -148,20 +148,16 @@ namespace IX.Versioning.NuSpec
 
             var found = false;
 
-            this.directory.EnumerateFilesRecursively(path, "*.nuspec").
+            this.directory
+                .EnumerateFilesRecursively(path, "*.nuspec")
 #if NETSTANDARD1_0
-                ForEach
+                .ForEach(filePath =>
 #else
-                ParallelForEach
+                .ParallelForEach(filePath =>
 #endif
-#pragma warning disable SA1110 // Opening parenthesis or bracket should be on declaration line
-#pragma warning disable SA1008 // Opening parenthesis should be spaced correctly
-                (csprojFile =>
-                {
-                    this.ProcessFile(csprojFile, newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
-                });
-#pragma warning restore SA1008 // Opening parenthesis should be spaced correctly
-#pragma warning restore SA1110 // Opening parenthesis or bracket should be on declaration line
+                    {
+                        this.ProcessFile(filePath, newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
+                    });
 
             return found;
         }

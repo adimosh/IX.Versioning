@@ -19,8 +19,8 @@ namespace IX.Versioning.Csproj
     /// <seealso cref="IX.Versioning.IVersioningFileParser" />
     public class CsprojFileParser : IVersioningFileParser
     {
-        private static readonly Regex AssemblyVersionRegex = new Regex(@"^\s*\[\s*assembly\s*:\s*(?:global::)(?:System.Reflection.)AssemblyVersion(?:Attribute)\(\s*""(?<versionString>.*)""\s*\)\s*\]\s*$");
-        private static readonly Regex AssemblyFileVersionRegex = new Regex(@"^\s*\[\s*assembly\s*:\s*(?:global::)(?:System.Reflection.)AssemblyFileVersion(?:Attribute)\(\s*""(?<versionString>.*)""\s*\)\s*\]\s*$");
+        private static readonly Regex AssemblyVersionRegex = new Regex(@"^\s*\[\s*assembly\s*:\s*(?:global::)?(?:System.Reflection.)?AssemblyVersion(?:Attribute)?\(\s*""(?<versionString>.*)""\s*\)\s*\]\s*$");
+        private static readonly Regex AssemblyFileVersionRegex = new Regex(@"^\s*\[\s*assembly\s*:\s*(?:global::)?(?:System.Reflection.)?AssemblyFileVersion(?:Attribute)?\(\s*""(?<versionString>.*)""\s*\)\s*\]\s*$");
 
         private readonly IFile file;
         private readonly IPath path;
@@ -160,23 +160,21 @@ namespace IX.Versioning.Csproj
 
                 var foundAssemblyAttributes = false;
 
-                this.directory.EnumerateFilesRecursively(folderPath, "*.cs")
+                this.directory
+                    .EnumerateFilesRecursively(folderPath, "*.cs")
 #if NETSTANDARD1_0
-                    .ForEach
+                    .ForEach(filePath =>
 #else
-                    .ParallelForEach
+                    .ParallelForEach(filePath =>
 #endif
-#pragma warning disable SA1110 // Opening parenthesis or bracket should be on declaration line
-#pragma warning disable SA1008 // Opening parenthesis should be spaced correctly
-                    (async filePath =>
                     {
                         var lines = new List<string>();
-                        var found = true;
+                        var found = false;
                         using (global::System.IO.StreamReader handle = this.file.OpenText(filePath))
                         {
                             while (!handle.EndOfStream)
                             {
-                                var line = await handle.ReadLineAsync();
+                                var line = handle.ReadLine();
 
                                 if (!string.IsNullOrWhiteSpace(line))
                                 {
@@ -211,9 +209,10 @@ namespace IX.Versioning.Csproj
 
                         if (found)
                         {
+                            var finalText = string.Join(Environment.NewLine, lines);
                             using (global::System.IO.StreamWriter writeHandle = this.file.CreateText(filePath))
                             {
-                                lines.ForEach(async line => await writeHandle.WriteLineAsync());
+                                writeHandle.Write(finalText);
                             }
 
                             foundAssemblyAttributes = true;
@@ -221,8 +220,6 @@ namespace IX.Versioning.Csproj
 
                         lines.Clear();
                     });
-#pragma warning restore SA1110 // Opening parenthesis or bracket should be on declaration line
-#pragma warning restore SA1008 // Opening parenthesis should be spaced correctly
 
                 return foundAssemblyAttributes;
             }
@@ -258,20 +255,16 @@ namespace IX.Versioning.Csproj
 
             var found = false;
 
-            this.directory.EnumerateFilesRecursively(path, "*.csproj").
+            this.directory
+                .EnumerateFilesRecursively(path, "*.csproj")
 #if NETSTANDARD1_0
-                ForEach
+                    .ForEach(filePath =>
 #else
-                ParallelForEach
+                    .ParallelForEach(filePath =>
 #endif
-#pragma warning disable SA1110 // Opening parenthesis or bracket should be on declaration line
-#pragma warning disable SA1008 // Opening parenthesis should be spaced correctly
-                (csprojFile =>
-                {
-                    this.ProcessFile(csprojFile, newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
-                });
-#pragma warning restore SA1008 // Opening parenthesis should be spaced correctly
-#pragma warning restore SA1110 // Opening parenthesis or bracket should be on declaration line
+                    {
+                        this.ProcessFile(filePath, newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
+                    });
 
             return found;
         }
