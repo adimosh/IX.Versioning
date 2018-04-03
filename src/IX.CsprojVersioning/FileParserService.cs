@@ -37,7 +37,7 @@ namespace CsprojVersioning
 
                 var extension = this.path.GetExtension(path);
 
-                if (extension == "csproj")
+                if (extension == ".csproj")
                 {
                     var processResult = this.csprojParser.ProcessFile(path, majorVersion, minorVersion, buildVersion, revisionVersion, preReleaseVersion, release);
                     if (processResult)
@@ -53,7 +53,7 @@ namespace CsprojVersioning
                         }
                     }
                 }
-                else if (extension == "nuspec")
+                else if (extension == ".nuspec")
                 {
                     var processResult = this.nuspecParser.ProcessFile(path, majorVersion, minorVersion, buildVersion, revisionVersion, preReleaseVersion, release);
                     if (processResult)

@@ -12,6 +12,7 @@ nuget:
   disable_publish_on_pr: true
 before_build:
 - cmd: >-
+
     dotnet clean src\IX.Versioning.sln -c Release
 
     dotnet clean src\IX.Versioning.sln -c Debug
@@ -45,6 +46,8 @@ build:
   project: src\IX.Versioning.sln
   parallel: true
   verbosity: minimal
+after_build:
+- cmd: dotnet pack src\IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release --no-build
 artifacts:
 - path: src\IX.Versioning\bin\Release\IX.Versioning.%APPVEYOR_BUILD_VERSION%.nupkg
   name: IX.Versioning

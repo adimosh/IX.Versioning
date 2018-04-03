@@ -16,7 +16,7 @@ namespace IX.Versioning
         /// </summary>
         private static readonly Regex SuffixRegex = new Regex("^(?<alphabeta>alpha|beta|prealpha|prebeta|pre-alpha|pre-beta)(?<number>\\d*)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
 
-        private static readonly Regex VersionRegex = new Regex(@"^(?<majorVersion>\d{{1,}}).(?<minorVersion>\d{{1,}}).(?<buildVersion>\d{{1,}})(?:.(?<revisionVersion>\d{{1,}}))?(?:-(?<prereleaseVersion>[\d\w]{{1,}}))?$");
+        private static readonly Regex VersionRegex = new Regex(@"^(?<majorVersion>\d{1,}).(?<minorVersion>\d{1,}).(?<buildVersion>\d{1,})(?:.(?<revisionVersion>\d{1,}))?(?:-(?<prereleaseVersion>[\d-\w]{1,}))?$");
 
         /// <summary>
         /// Versions the strings.
