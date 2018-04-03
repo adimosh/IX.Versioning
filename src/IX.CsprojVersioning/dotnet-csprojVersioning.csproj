@@ -47,8 +47,4 @@
 
   <Import Project="..\CliToolsReference.Normal.targets" />
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet pack" />
-  </Target>
-
 </Project>

@@ -46,6 +46,8 @@ build:
   project: src\IX.Versioning.sln
   parallel: true
   verbosity: minimal
+after_build:
+- cmd: dotnet pack src\IX.CsprojVersioning\dotnet-csprojVersioning.csproj -c Release --no-build
 artifacts:
 - path: src\IX.Versioning\bin\Release\IX.Versioning.%APPVEYOR_BUILD_VERSION%.nupkg
   name: IX.Versioning
