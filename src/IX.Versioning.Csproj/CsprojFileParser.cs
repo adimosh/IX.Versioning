@@ -85,9 +85,8 @@ namespace IX.Versioning.Csproj
 
             XElement missingContainer = null;
 
-#pragma warning disable SA1312 // Variable names should begin with lower-case letter
-            (var ReleaseVersion, var FileVersion, var AssemblyVersion, var FileVersionClassic, var AssemblyVersionClassic) = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
-#pragma warning restore SA1312 // Variable names should begin with lower-case letter
+            (var releaseVersion, var packageVersion, var fileVersion, var assemblyVersion)
+                = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
 
             var isCore = root.Attribute("Sdk")?.Value?.InvariantCultureEqualsInsensitive("Microsoft.NET.Sdk") ?? false;
 
@@ -98,7 +97,7 @@ namespace IX.Versioning.Csproj
                     missingContainer,
                     root,
                     xVersions,
-                    FileVersion,
+                    packageVersion,
                     "Version");
 
                 IEnumerable<XElement> xFileVersions = root.Descendants("PropertyGroup").Descendants("FileVersion");
@@ -106,7 +105,7 @@ namespace IX.Versioning.Csproj
                     missingContainer,
                     root,
                     xFileVersions,
-                    FileVersion,
+                    fileVersion,
                     "FileVersion");
 
                 IEnumerable<XElement> xAssemblyVersions = root.Descendants("PropertyGroup").Descendants("AssemblyVersion");
@@ -114,7 +113,7 @@ namespace IX.Versioning.Csproj
                     missingContainer,
                     root,
                     xAssemblyVersions,
-                    AssemblyVersion,
+                    assemblyVersion,
                     "AssemblyVersion");
 
                 void EnsureCorrectOnlyOneVersion(XElement missingElementContainerBase, in XElement rootElementContainer, in IEnumerable<XElement> xElements, in string correctVersion, in string versionName)
@@ -183,7 +182,7 @@ namespace IX.Versioning.Csproj
                                     {
                                         found = true;
 
-                                        lines.Add($"[assembly: global::System.Reflection.AssemblyVersion(\"{AssemblyVersionClassic}\")]");
+                                        lines.Add($"[assembly: global::System.Reflection.AssemblyVersion(\"{assemblyVersion}\")]");
                                     }
                                     else
                                     {
@@ -192,7 +191,7 @@ namespace IX.Versioning.Csproj
                                         {
                                             found = true;
 
-                                            lines.Add($"[assembly: global::System.Reflection.AssemblyFileVersion(\"{FileVersionClassic}\")]");
+                                            lines.Add($"[assembly: global::System.Reflection.AssemblyFileVersion(\"{fileVersion}\")]");
                                         }
                                         else
                                         {

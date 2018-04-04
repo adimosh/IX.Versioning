@@ -86,12 +86,13 @@ namespace IX.Versioning.NuSpec
                 root.Add(missingContainer);
             }
 
-            (var releaseVersion, var fileVersion, var assemblyVersion, var fileVersionClassic, var assemblyVersionClassic) = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
+            (var releaseVersion, var packageVersion, var fileVersion, var assemblyVersion)
+                = VersionElementsHelper.VersionStrings(newMajorVersion, newMinorVersion, newBuildVersion, newRevisionVersion, newVersionSuffix, noRevision);
 
             IEnumerable<XElement> xVersions = missingContainer.Elements().Where(p => p.Name.LocalName.CurrentCultureEquals("version"));
             EnsureCorrectOnlyOneVersion(
                 xVersions,
-                fileVersion,
+                packageVersion,
                 "version");
 
             void EnsureCorrectOnlyOneVersion(IEnumerable<XElement> xElements, string correctVersion, string versionName)

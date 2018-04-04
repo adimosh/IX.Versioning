@@ -28,7 +28,7 @@ namespace IX.Versioning
         /// <param name="newVersionSuffix">The new version suffix.</param>
         /// <param name="noRevision">if set to <c>true</c>, no revision version is set.</param>
         /// <returns>System.String.</returns>
-        public static (string releaseVersion, string fileVersion, string assemblyVersion, string fileVersionClassic, string assemblyVersionClassic) VersionStrings(int newMajorVersion, int newMinorVersion, int newBuildVersion, int newRevisionVersion = 0, string newVersionSuffix = null, bool noRevision = false)
+        public static (string releaseVersion, string packageVersion, string fileVersion, string assemblyVersion) VersionStrings(int newMajorVersion, int newMinorVersion, int newBuildVersion, int newRevisionVersion = 0, string newVersionSuffix = null, bool noRevision = false)
         {
             string suffix;
             if (string.IsNullOrWhiteSpace(newVersionSuffix))
@@ -61,9 +61,6 @@ namespace IX.Versioning
                 noRevision ?
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}{suffix}" :
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}.{newRevisionVersion}{suffix}",
-                noRevision ?
-                    $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}{suffix}" :
-                    $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}.0{suffix}",
                 noRevision ?
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}" :
                     $"{newMajorVersion}.{newMinorVersion}.{newBuildVersion}.{newRevisionVersion}",
