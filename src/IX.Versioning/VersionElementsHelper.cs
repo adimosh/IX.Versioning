@@ -48,11 +48,11 @@ namespace IX.Versioning
                         alphabeta = "alpha";
                     }
 
-                    suffix = $"{alphabeta}{match.Groups["number"].Value}";
+                    suffix = $"-{alphabeta}{match.Groups["number"].Value}";
                 }
                 else
                 {
-                    suffix = "alpha";
+                    suffix = "-alpha";
                 }
             }
 
