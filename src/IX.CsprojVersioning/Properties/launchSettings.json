@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "dotnet-csprojVersioning": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\Projects\\UTAS\\api\\Capabilities\\Annotations\\uTAS.Capabilities.Annotations\\uTAS.Capabilities.Annotations.csproj 5.0.0.212"
-    }
-  }
-}
