@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;net45;netstandard1.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\DefaultPackageVersionSystem.props" />
@@ -30,7 +30,7 @@
   <Import Project="..\StyleCop.targets" />
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="IX.Abstractions" Version="0.5.0.39" />
     <PackageReference Include="IX.StandardExtensions" Version="0.5.0.39" />
   </ItemGroup>
@@ -46,12 +46,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!='net45'">
-    <PackageReference Include="System.Linq" Version="4.3.0" />
-    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+  <ItemGroup>
+    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 
   <Import Project="..\CliToolsReference.Normal.targets" />

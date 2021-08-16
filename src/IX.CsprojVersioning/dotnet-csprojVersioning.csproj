@@ -3,7 +3,7 @@
   
   <PropertyGroup>
     <OutputType>exe</OutputType>
-    <TargetFrameworks>netcoreapp1.0;netcoreapp2.0;net452</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;net46</TargetFrameworks>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />
@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.0'">
-    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.0'">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
